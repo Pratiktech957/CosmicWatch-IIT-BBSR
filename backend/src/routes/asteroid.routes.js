@@ -1,8 +1,11 @@
 import express from "express";
-import { getAsteroids } from "../controllers/asteroid.controller.js";
+import { getAsteroids, getAsteroidById, getRiskAnalysis, analyzeRisk } from "../controllers/asteroid.controller.js";
 
 const router = express.Router();
 
-router.get("/asteroids", getAsteroids);
+router.get("/", getAsteroids);
+router.get("/:id", getAsteroidById);
+router.get("/:id/risk", getRiskAnalysis);
+router.post("/:id/analyze", analyzeRisk);
 
 export default router;

@@ -4,9 +4,12 @@ import { Menu, X, AlertTriangle, Eye, User } from 'lucide-react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '../../context/AuthContext';
+
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const { user, isAuthenticated, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -36,14 +39,14 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center gap-2 group cursor-pointer">
+                <Link to="/" className="flex items-center gap-2 group cursor-pointer">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-space-accent to-blue-600 flex items-center justify-center animate-pulse-slow">
                         <span className="w-2 h-2 bg-white rounded-full" />
                     </div>
                     <span className="font-display font-bold text-2xl tracking-wider text-white group-hover:text-space-accent transition-colors">
                         COSMIC<span className="font-light text-space-highlight">WATCH</span>
                     </span>
-                </div>
+                </Link>
 
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8">
@@ -67,10 +70,25 @@ const Navbar = () => {
                     <button className="text-space-highlight hover:text-space-success transition-colors" title="Watchlist">
                         <Eye size={20} />
                     </button>
-                    <Link to="/login" className="flex items-center gap-2 px-4 py-2 border border-space-accent/50 rounded hover:bg-space-accent/10 transition-all text-space-accent font-display text-sm uppercase tracking-wider">
-                        <User size={16} />
-                        <span>Login</span>
-                    </Link>
+
+                    {isAuthenticated ? (
+                        <div className="flex items-center gap-4">
+                            <span className="text-space-highlight text-sm font-display tracking-wider uppercase">
+                                {user?.name || "COMMANDER"}
+                            </span>
+                            <button
+                                onClick={logout}
+                                className="flex items-center gap-2 px-4 py-2 border border-red-500/50 rounded hover:bg-red-500/10 transition-all text-red-400 font-display text-sm uppercase tracking-wider"
+                            >
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="flex items-center gap-2 px-4 py-2 border border-space-accent/50 rounded hover:bg-space-accent/10 transition-all text-space-accent font-display text-sm uppercase tracking-wider">
+                            <User size={16} />
+                            <span>Login</span>
+                        </Link>
+                    )}
                 </div>
 
                 {/* Mobile Menu Toggle */}

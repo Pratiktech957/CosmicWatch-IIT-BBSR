@@ -1,71 +1,87 @@
-import { fetchAsteroids } from "../services/nasa.service.js";
-import { calculateRisk } from "../utils/riskCalculator.js";
+import { Asteroid } from "../models/Asteroid.js";
+import { RiskAnalysis } from "../models/RiskAnalysis.js";
+import { fetchAsteroidData, fetchAsteroidById } from "../services/nasa.service.js";
 
-export async function getAsteroids(req, res) {
+// Get all asteroids with pagination & filters
+export const getAsteroids = async (req, res) => {
   try {
-    const today = new Date().toISOString().slice(0, 10);
-    const startDate = req.query.start_date || today;
-    const endDate = req.query.end_date || startDate;
+    const { page = 1, limit = 10, hazard } = req.query;
+    const query = {};
 
-    const neoData = await fetchAsteroids(startDate, endDate);
-    const result = [];
+    if (hazard === "true") query["hazard.isPotentiallyHazardous"] = true;
 
-    for (const date in neoData) {
-      for (const asteroid of neoData[date]) {
-        if (!asteroid.close_approach_data.length) continue;
+    // Sync with NASA API first (optional: could be background job)
+    await fetchAsteroidData();
 
-        const approach = asteroid.close_approach_data.reduce(
-          (min, curr) =>
-            Number(curr.miss_distance.kilometers) <
-            Number(min.miss_distance.kilometers)
-              ? curr
-              : min
-        );
+    const asteroids = await Asteroid.find(query)
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ "orbital.distanceFromEarthKm": 1 });
 
-        const diameter =
-          asteroid.estimated_diameter.kilometers
-            .estimated_diameter_max;
+    const total = await Asteroid.countDocuments(query);
 
-        const speed = Number(
-          approach.relative_velocity.kilometers_per_hour
-        );
+    res.json({
+      asteroids,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-        const distance = Number(
-          approach.miss_distance.kilometers
-        );
+// Get single asteroid by ID or NASA ID
+export const getAsteroidById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let asteroid;
 
-        const risk = calculateRisk(diameter, speed, distance);
+    // Check if valid ObjectId, else try nasaId
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      asteroid = await Asteroid.findById(id);
+    } else {
+      asteroid = await Asteroid.findOne({ nasaId: id });
+    }
 
-        result.push({
-          id: asteroid.id,
-          name: asteroid.name,
-          date: approach.close_approach_date,
-          diameter_km: Number(diameter.toFixed(3)),
-          speed_kmph: Math.round(speed),
-          miss_distance_km: Math.round(distance),
-          hazardous: asteroid.is_potentially_hazardous_asteroid,
-          risk_score: risk.score,
-          risk_level: risk.level
-        });
+    // If not found in DB, try fetching from NASA API
+    if (!asteroid) {
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        // Assume it's a NASA ID
+        asteroid = await fetchAsteroidById(id);
       }
     }
 
-    result.sort((a, b) => b.risk_score - a.risk_score);
+    if (!asteroid) return res.status(404).json({ message: "Asteroid not found" });
 
-    res.json({
-      count: result.length,
-      start_date: startDate,
-      end_date: endDate,
-      asteroids: result
-    });
-
-  } catch (error) {
-    if (error.response) {
-      return res
-        .status(error.response.status)
-        .json({ error: error.response.data });
-    }
-
-    res.status(500).json({ error: "Failed to fetch asteroid data" });
+    res.json(asteroid);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-}
+};
+
+// Get Risk Analysis for an asteroid
+export const getRiskAnalysis = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const risk = await RiskAnalysis.findOne({ asteroidId: id });
+
+    if (!risk) return res.status(404).json({ message: "No risk analysis found for this asteroid" });
+
+    res.json(risk);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Manually trigger risk analysis
+import { analyzeAsteroidRisk } from "../services/risk.service.js";
+
+export const analyzeRisk = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await analyzeAsteroidRisk(id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
