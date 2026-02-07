@@ -59,7 +59,19 @@ const Login = () => {
                 <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-500"></div>
                 <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-500"></div>
 
-                <div className="text-center mb-10">
+                {/* Logo */}
+                <div className="absolute top-6 left-6 z-20">
+                    <Link to="/" className="flex items-center gap-2 group cursor-pointer">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-space-accent to-blue-600 flex items-center justify-center animate-pulse-slow">
+                            <span className="w-2 h-2 bg-white rounded-full" />
+                        </div>
+                        <span className="font-display font-bold text-lg tracking-wider text-white group-hover:text-space-accent transition-colors">
+                            COSMIC<span className="font-light text-space-highlight">WATCH</span>
+                        </span>
+                    </Link>
+                </div>
+
+                <div className="text-center mb-10 mt-8">
                     <motion.h1
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -102,8 +114,8 @@ const Login = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder="IDENTITY_KEY (EMAIL)"
-                            className="tech-input w-full py-4 pl-12 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Enter your email"
+                            className="tech-input w-full py-4 pl-12 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>
@@ -121,8 +133,8 @@ const Login = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="PASSCODE"
-                            className="tech-input w-full py-4 pl-12 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Enter your password"
+                            className="tech-input w-full py-4 pl-12 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>

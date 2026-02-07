@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import AuthLayout from "../components/AuthLayout";
+import Navbar from "../components/layout/Navbar";
 
 const Dashboard = () => {
     return (
-        <div className="min-h-screen w-full bg-[#030014] text-white flex items-center justify-center overflow-hidden relative">
+        <div className="min-h-screen w-full bg-[#030014] text-white flex items-center justify-center overflow-hidden relative pt-20">
+            <Navbar />
             {/* Background elements similar to AuthLayout but maybe less intense for a dashboard, 
            or reusing AuthLayout if it fits. For a dashboard, a full screen layout is usually better than a centered card.
            Let's make a simple cosmic dashboard view. */}

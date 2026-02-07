@@ -9,8 +9,7 @@ import AuthLayout from "../components/AuthLayout";
 const Signup = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        name: "",
-        username: "",
+        fullName: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -31,26 +30,26 @@ const Signup = () => {
         setLoading(true);
 
         // Validation Logic
-        if (!formData.name || !formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError("ALL FIELDS REQUIRED FOR REGISTRATION");
+        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+            setError("All fields are required");
             setLoading(false);
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            setError("SECURITY CODES DO NOT MATCH");
+            setError("Passwords do not match");
             setLoading(false);
             return;
         }
 
         if (formData.password.length < 6) {
-            setError("SECURITY CODE TOO WEAK (MIN 6 CHARS)");
+            setError("Password must be at least 6 characters");
             setLoading(false);
             return;
         }
 
         if (!formData.agreeTerms) {
-            setError("MUST AGREE TO MISSION PROTOCOLS");
+            setError("Please agree to the mission protocols");
             setLoading(false);
             return;
         }
@@ -77,7 +76,19 @@ const Signup = () => {
                 <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-500"></div>
                 <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-500"></div>
 
-                <div className="text-center mb-8">
+                {/* Logo */}
+                <div className="absolute top-6 left-6 z-20">
+                    <Link to="/" className="flex items-center gap-2 group cursor-pointer">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-space-accent to-blue-600 flex items-center justify-center animate-pulse-slow">
+                            <span className="w-2 h-2 bg-white rounded-full" />
+                        </div>
+                        <span className="font-display font-bold text-lg tracking-wider text-white group-hover:text-space-accent transition-colors">
+                            COSMIC<span className="font-light text-space-highlight">WATCH</span>
+                        </span>
+                    </Link>
+                </div>
+
+                <div className="text-center mb-8 mt-8">
                     <motion.h1
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -117,30 +128,11 @@ const Signup = () => {
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-500/50 w-5 h-5 group-focus-within:text-cyan-400 transition-colors" />
                         <input
                             type="text"
-                            name="name"
-                            value={formData.name}
+                            name="fullName"
+                            value={formData.fullName}
                             onChange={handleChange}
-                            placeholder="OPERATOR NAME"
-                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
-                            disabled={loading}
-                        />
-                        <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="relative group"
-                    >
-                        <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-500/50 w-5 h-5 group-focus-within:text-cyan-400 transition-colors" />
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            placeholder="CODENAME"
-                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Enter your full name"
+                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>
@@ -158,8 +150,8 @@ const Signup = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder="COMM LINK (EMAIL)"
-                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Enter your email"
+                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>
@@ -177,8 +169,8 @@ const Signup = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="SECURITY CODE"
-                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Create a password"
+                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>
@@ -196,8 +188,8 @@ const Signup = () => {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            placeholder="CONFIRM SECURITY"
-                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-widest uppercase"
+                            placeholder="Confirm your password"
+                            className="tech-input w-full py-3 pl-10 pr-4 rounded-none focus:outline-none text-sm tracking-wide"
                             disabled={loading}
                         />
                         <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-500 group-focus-within:w-full transition-all duration-300"></div>

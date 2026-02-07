@@ -20,8 +20,8 @@ const Navbar = () => {
         { name: 'Home', path: '/' },
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Live Feed', path: '/live' },
-        { name: '3D View', path: '/orbit' },
         { name: 'Community', path: '/community' },
+        { name: 'About', path: '/about' },
     ];
 
     return (
