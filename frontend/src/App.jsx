@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CosmicScrollyCanvas from './components/CosmicScrollyCanvas';
 import CosmicOverlay from './components/CosmicOverlay';
 import OrbitScene from './components/OrbitScene';
 import RiskDashboard from './components/RiskDashboard';
 import WatchlistGrid from './components/WatchlistGrid';
+import Login from './components/Login';
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <main className="bg-space-950 min-h-screen text-white selection:bg-cosmic-cyan/30 selection:text-white overflow-x-hidden">
 
