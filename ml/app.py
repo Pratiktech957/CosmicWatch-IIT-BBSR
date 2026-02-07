@@ -13,7 +13,19 @@ FEATURES = list(model.feature_names_in_)
 
 app = Flask(__name__)
 
-def decide_risk(p_low, p_med, p_high):
+def decide_risk(p_low, p_med, p_high, pha, sentry, miss_au):
+    """
+    Hybrid logic:
+    1. Safety overrides (NASA-style)
+    2. Otherwise ML argmax
+    """
+
+    if sentry == 1:
+        return "HIGH"
+
+    if pha == 1 and miss_au < 0.05:
+        return "HIGH"
+
     probs = {
         "LOW": p_low,
         "MEDIUM": p_med,
@@ -48,7 +60,15 @@ def predict():
         }), 400
 
     probs = model.predict_proba(df)[0]
-    risk = decide_risk(probs[0], probs[1], probs[2])
+
+    risk = decide_risk(
+        probs[0],
+        probs[1],
+        probs[2],
+        int(data["pha"]),
+        int(data["sentry"]),
+        float(data["miss_distance_au"])
+    )
 
     return jsonify({
         "risk": risk,
@@ -59,9 +79,10 @@ def predict():
         },
         "explanation": {
             "diameter": "Large" if data["diameter_km"] > 0.1 else "Small",
-            "distance": "Very close" if data["miss_distance_au"] < 0.05 else "Safe",
-            "pha": int(data.get("pha", 0)),
-            "sentry": int(data.get("sentry", 0))
+            "miss_distance": "Very close" if data["miss_distance_au"] < 0.05 else "Safe",
+            "pha": int(data["pha"]),
+            "sentry": int(data["sentry"]),
+            "decision_type": "Hybrid (Safety Override + ML)"
         }
     })
 
