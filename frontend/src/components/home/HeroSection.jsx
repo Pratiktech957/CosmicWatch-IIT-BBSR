@@ -5,6 +5,7 @@ import * as random from 'three/examples/jsm/utils/BufferGeometryUtils.js'; // No
 // Actually, standard practice for random points:
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const StarField = (props) => {
     const ref = useRef();
@@ -115,10 +116,10 @@ const HeroSection = () => {
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                     </button>
 
-                    <button className="group flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-display font-bold text-lg tracking-widest uppercase hover:bg-white/5 transition-all">
+                    <Link to="/signup" className="group flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-display font-bold text-lg tracking-widest uppercase hover:bg-white/5 transition-all">
                         <Globe size={20} className="text-space-accent" />
                         Create Free Account
-                    </button>
+                    </Link>
                 </motion.div>
             </div>
 

@@ -67,10 +67,10 @@ const Navbar = () => {
                     <button className="text-space-highlight hover:text-space-success transition-colors" title="Watchlist">
                         <Eye size={20} />
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-space-accent/50 rounded hover:bg-space-accent/10 transition-all text-space-accent font-display text-sm uppercase tracking-wider">
+                    <Link to="/login" className="flex items-center gap-2 px-4 py-2 border border-space-accent/50 rounded hover:bg-space-accent/10 transition-all text-space-accent font-display text-sm uppercase tracking-wider">
                         <User size={16} />
                         <span>Login</span>
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Toggle */}
