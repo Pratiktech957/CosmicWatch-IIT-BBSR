@@ -1,56 +1,20 @@
-import React, { useState } from 'react';
-import CosmicScrollyCanvas from './components/CosmicScrollyCanvas';
-import CosmicOverlay from './components/CosmicOverlay';
-import OrbitScene from './components/OrbitScene';
-import RiskDashboard from './components/RiskDashboard';
-import WatchlistGrid from './components/WatchlistGrid';
-import Login from './components/Login';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home';
 
-const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
-  }
-
+function App() {
   return (
-    <main className="bg-space-950 min-h-screen text-white selection:bg-cosmic-cyan/30 selection:text-white overflow-x-hidden">
-
-      {/* 1. Hero / Scrollytelling Section */}
-      {/* The canvas and overlay work together in a shared relative container */}
-      <section className="relative z-10 w-full">
-        <CosmicScrollyCanvas />
-        <CosmicOverlay />
-      </section>
-
-      {/* 2. Interactive 3D Orbit */}
-      <section className="relative z-20 w-full h-screen border-b border-t border-white/10 shadow-[0_0_50px_rgba(0,243,255,0.1)]">
-        <OrbitScene />
-      </section>
-
-      {/* 3. Data Dashboard */}
-      <section className="relative z-20 w-full">
-        <RiskDashboard />
-      </section>
-
-      {/* 4. Watchlist Grid */}
-      <section className="relative z-20 w-full pb-20">
-        <WatchlistGrid />
-      </section>
-
-      {/* Footer */}
-      <footer className="relative z-20 w-full py-12 bg-space-950/80 backdrop-blur-md border-t border-white/5 text-center">
-        <h2 className="text-2xl font-display font-bold text-white mb-2 tracking-widest">COSMIC WATCH</h2>
-        <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">
-          Near-Earth Object Surveillance System
-        </p>
-        <div className="mt-8 text-[10px] text-gray-600 font-mono">
-          POWERED BY NASA NEO API • HACKATHON BUILD 2026
-        </div>
-      </footer>
-
-    </main>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Placeholder Routes for future implementation */}
+        <Route path="/dashboard" element={<div className="p-20 text-center text-white">Dashboard Implementation Pending...</div>} />
+        <Route path="/live" element={<div className="p-20 text-center text-white">Live Feed Implementation Pending...</div>} />
+        <Route path="/orbit" element={<div className="p-20 text-center text-white">3D View Implementation Pending...</div>} />
+        <Route path="/community" element={<div className="p-20 text-center text-white">Community Implementation Pending...</div>} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

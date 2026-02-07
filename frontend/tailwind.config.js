@@ -8,24 +8,27 @@ export default {
         extend: {
             colors: {
                 space: {
-                    950: '#070a13',
-                    900: '#0b0f1a',
-                    800: '#121826',
-                },
-                cosmic: {
-                    cyan: '#00f3ff',
-                    purple: '#bc13fe',
-                    orange: '#ff9e00',
+                    black: "#0B0B15",
+                    void: "#050508",
+                    dark: "#1A1625",
+                    accent: "#00F0FF", // Cyan
+                    highlight: "#D1D5DB", // Light Grey
+                    warning: "#FFBF00", // Amber
+                    danger: "#FF003C", // Red
+                    success: "#00FF9D", // Green
                 }
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                display: ['Orbitron', 'sans-serif'],
-                grotesk: ['Space Grotesk', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace'],
+                display: ['Rajdhani', 'sans-serif'],
+            },
+            backgroundImage: {
+                'starfield': "url('/assets/starfield.png')", // Placeholder
+                'radial-gradient': 'radial-gradient(circle, var(--tw-gradient-stops))',
             },
             animation: {
-                'spin-slow': 'spin 20s linear infinite',
-                'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             }
         },
     },
