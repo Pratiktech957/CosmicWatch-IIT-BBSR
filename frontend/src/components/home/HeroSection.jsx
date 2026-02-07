@@ -1,70 +1,11 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
-import * as random from 'three/examples/jsm/utils/BufferGeometryUtils.js'; // Note: BufferGeometryUtils might not have the correct random function export.
-// Actually, standard practice for random points:
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const StarField = (props) => {
-    const ref = useRef();
-
-    // Generating random points properly
-    const sphere = useMemo(() => {
-        const temp = new Float32Array(5000 * 3);
-        for (let i = 0; i < 5000; i++) {
-            const theta = 2 * Math.PI * Math.random();
-            const phi = Math.acos(2 * Math.random() - 1);
-            const r = 1.2 + Math.random() * 0.8; // Radius between 1.2 and 2.0 to be outside a potential "earth" if we add one, or just general sphere
-            // Actually for a simple starfield fill:
-            const x = (Math.random() - 0.5) * 2;
-            const y = (Math.random() - 0.5) * 2;
-            const z = (Math.random() - 0.5) * 2;
-            // Normalize and scale
-            const d = Math.sqrt(x * x + y * y + z * z);
-            temp[i * 3] = (x / d) * (10 + Math.random() * 20); // Spread out
-            temp[i * 3 + 1] = (y / d) * (10 + Math.random() * 20);
-            temp[i * 3 + 2] = (z / d) * (10 + Math.random() * 20);
-
-            // Let's just use a simple random box distribution for performance and look
-            // temp[i*3] = (Math.random() - 0.5) * 30;
-            // temp[i*3+1] = (Math.random() - 0.5) * 30;
-            // temp[i*3+2] = (Math.random() - 0.5) * 30;
-        }
-        return temp;
-    }, []);
-
-    useFrame((state, delta) => {
-        ref.current.rotation.x -= delta / 30;
-        ref.current.rotation.y -= delta / 40;
-    });
-
-    return (
-        <group rotation={[0, 0, Math.PI / 4]}>
-            <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-                <PointMaterial
-                    transparent
-                    color="#f272c8"
-                    size={0.02}
-                    sizeAttenuation={true}
-                    depthWrite={false}
-                />
-            </Points>
-        </group>
-    );
-};
-
 const HeroSection = () => {
     return (
-        <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-space-black">
-            {/* 3D Background */}
-            <div className="absolute inset-0 z-0 opacity-60">
-                <Canvas camera={{ position: [0, 0, 1] }}>
-                    <StarField />
-                </Canvas>
-            </div>
-
+        <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-transparent">
             {/* Overlay Gradient */}
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-space-black/20 to-space-black pointer-events-none" />
 

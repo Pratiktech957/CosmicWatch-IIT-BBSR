@@ -41,7 +41,7 @@ const LiveStats = () => {
     ];
 
     return (
-        <section className="py-20 bg-space-black relative">
+        <section className="py-20 bg-transparent relative">
             <div className="max-w-7xl mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0 }}

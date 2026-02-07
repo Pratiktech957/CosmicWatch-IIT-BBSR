@@ -19,7 +19,7 @@ const Step = ({ icon: Icon, title, desc, stepNum }) => {
 
 const HowItWorks = () => {
     return (
-        <section className="py-32 bg-space-void relative overflow-hidden">
+        <section className="py-32 bg-transparent relative overflow-hidden">
             {/* Background Line */}
             <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-space-accent/20 to-transparent hidden md:block -translate-y-[80px]" />
 

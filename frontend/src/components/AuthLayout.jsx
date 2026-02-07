@@ -5,15 +5,15 @@ const AuthLayout = ({ children }) => {
   const [stars, setStars] = useState([]);
 
   useEffect(() => {
-    const starCount = 50;
+    const starCount = 100;
     const newStars = Array.from({ length: starCount }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
       animationDuration: `${Math.random() * 3 + 2}s`,
       animationDelay: `${Math.random() * 2}s`,
-      width: `${Math.random() * 2 + 1}px`,
-      height: `${Math.random() * 2 + 1}px`,
+      width: `${Math.random() * 3 + 2}px`,
+      height: `${Math.random() * 3 + 2}px`,
     }));
     setStars(newStars);
   }, []);

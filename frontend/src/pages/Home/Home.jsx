@@ -8,6 +8,7 @@ import FeatureGrid from '../../components/home/FeatureGrid';
 import BonusTeaser from '../../components/home/BonusTeaser';
 import Footer from '../../components/layout/Footer';
 import { homeConfig } from './home.config';
+import BackgroundStars from '../../components/BackgroundStars';
 
 const Home = () => {
     useEffect(() => {
@@ -15,19 +16,22 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="bg-space-black min-h-screen text-white overflow-x-hidden selection:bg-space-accent selection:text-space-black">
-            <Navbar />
+        <div className="bg-space-black min-h-screen text-white overflow-x-hidden selection:bg-space-accent selection:text-space-black relative">
+            <BackgroundStars />
+            <div className="relative z-10">
+                <Navbar />
 
-            <main>
-                <HeroSection />
-                <LiveStats />
-                <HowItWorks />
-                <RiskScale />
-                <FeatureGrid />
-                <BonusTeaser />
-            </main>
+                <main>
+                    <HeroSection />
+                    <LiveStats />
+                    <HowItWorks />
+                    <RiskScale />
+                    <FeatureGrid />
+                    <BonusTeaser />
+                </main>
 
-            <Footer />
+                <Footer />
+            </div>
         </div>
     );
 };

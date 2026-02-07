@@ -58,7 +58,7 @@ const FeatureGrid = () => {
     ];
 
     return (
-        <section className="py-24 bg-space-void relative">
+        <section className="py-24 bg-transparent relative">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="mb-16 text-center md:text-left">
                     <h2 className="text-3xl font-display font-bold text-white mb-4">Core Capabilities</h2>
