@@ -1,92 +1,133 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-
-const RiskLevel = ({ level, color, range, title, desc, isActive, onHover }) => (
-    <motion.div
-        className={`flex-1 p-8 border hover:flex-[1.5] transition-all duration-500 cursor-default group relative overflow-hidden
-        ${isActive ? `bg-${color}/10 border-${color}` : 'bg-transparent border-white/5'}
-    `}
-        onMouseEnter={onHover}
-    >
-        <div className={`absolute top-0 left-0 w-1 h-full bg-${color} opacity-50`} />
-
-        <div className="relative z-10">
-            <span className={`text-xs font-mono font-bold uppercase tracking-widest text-${color} mb-2 block`}>
-                Level {level}
-            </span>
-            <h3 className="text-3xl font-display font-bold text-white mb-2">{title}</h3>
-            <p className="text-white/40 font-mono text-sm mb-6">{range}</p>
-
-            <motion.p
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: isActive ? 1 : 0.5, height: 'auto' }}
-                className="text-space-highlight/70 text-sm leading-relaxed"
-            >
-                {desc}
-            </motion.p>
-        </div>
-
-        {/* Background Glow */}
-        {isActive && (
-            <div className={`absolute -right-10 -bottom-10 w-64 h-64 bg-${color}/20 blur-[80px] rounded-full pointer-events-none`} />
-        )}
-    </motion.div>
-);
+import React from 'react';
 
 const RiskScale = () => {
-    const [hovered, setHovered] = useState(1);
+    const riskLevels = [
+        { level: "LOW", color: "bg-green-500", desc: "Minimal threat", width: "25%" },
+        { level: "MODERATE", color: "bg-yellow-500", desc: "Monitor closely", width: "25%" },
+        { level: "HIGH", color: "bg-orange-500", desc: "Elevated risk", width: "25%" },
+        { level: "SEVERE", color: "bg-red-500", desc: "Immediate action", width: "25%" }
+    ];
+
+    const currentObjects = [
+        { name: "2024 AB3", distance: "1.2 LD", size: "45m", risk: "HIGH", color: "border-orange-500" },
+        { name: "2024 CL2", distance: "3.8 LD", size: "120m", risk: "MODERATE", color: "border-yellow-500" },
+        { name: "2024 BD1", distance: "0.8 LD", size: "18m", risk: "SEVERE", color: "border-red-500" },
+        { name: "2024 AE2", distance: "5.2 LD", size: "65m", risk: "LOW", color: "border-green-500" }
+    ];
 
     return (
-        <section className="py-24 bg-transparent">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="flex flex-col md:flex-row items-end justify-between mb-12">
-                    <div>
-                        <h2 className="text-4xl font-display font-bold text-white mb-2">Torino Impact Hazard Scale</h2>
-                        <p className="text-space-highlight/60">Standardized classification for near-Earth object impact events.</p>
+        <section className="py-20 px-6">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-space-accent/10 rounded-full mb-6">
+                        <div className="w-2 h-2 bg-space-accent rounded-full animate-pulse"></div>
+                        <span className="text-space-accent text-sm font-semibold">RISK ASSESSMENT</span>
                     </div>
-                    <div className="hidden md:block text-right">
-                        <div className="text-xs font-mono text-space-success">CURRENT GLOBAL THREAT</div>
-                        <div className="text-2xl font-bold text-space-success">LEVEL 0 (NO HAZARD)</div>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                        <span className="text-white">Cosmic Threat </span>
+                        <span className="text-space-accent">Scale</span>
+                    </h2>
+                    <p className="text-space-gray-light text-lg max-w-2xl mx-auto">
+                        Real-time classification of near-Earth objects based on trajectory, size, and impact probability.
+                    </p>
+                </div>
+
+                <div className="bg-space-card/30 backdrop-blur-sm border border-space-border rounded-2xl p-8 mb-12">
+                    <div className="mb-6">
+                        <div className="flex justify-between mb-2">
+                            <span className="text-sm text-space-gray-light">RISK LEVEL METER</span>
+                            <span className="text-sm text-white font-semibold">CURRENT: MEDIUM</span>
+                        </div>
+                        
+                        {/* Risk scale bar */}
+                        <div className="h-4 bg-space-card rounded-full overflow-hidden">
+                            <div className="flex h-full">
+                                {riskLevels.map((risk, idx) => (
+                                    <div 
+                                        key={idx}
+                                        className={`h-full ${risk.color} transition-all duration-300 hover:opacity-90`}
+                                        style={{ width: risk.width }}
+                                        title={`${risk.level}: ${risk.desc}`}
+                                    >
+                                        <div className="h-full w-full relative">
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <span className="text-xs font-bold text-black opacity-0 hover:opacity-100 transition-opacity">
+                                                    {risk.level}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <div className="flex justify-between mt-3">
+                            {riskLevels.map((risk, idx) => (
+                                <div key={idx} className="text-center">
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-3 h-3 ${risk.color.replace('bg-', 'bg-')} rounded-full`}></div>
+                                        <span className="text-sm font-medium text-white">{risk.level}</span>
+                                    </div>
+                                    <div className="text-xs text-space-gray-light mt-1">{risk.desc}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6 mt-10">
+                        <div>
+                            <h3 className="text-xl font-bold mb-4 text-white">Risk Factors</h3>
+                            <ul className="space-y-3">
+                                {[
+                                    "Orbital intersection with Earth",
+                                    "Object size (≥50m)",
+                                    "Velocity (>20 km/s)",
+                                    "Detection uncertainty",
+                                    "Time to potential impact"
+                                ].map((factor, idx) => (
+                                    <li key={idx} className="flex items-center gap-3">
+                                        <div className="w-2 h-2 bg-space-accent rounded-full"></div>
+                                        <span className="text-space-gray-light">{factor}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 className="text-xl font-bold mb-4 text-white">Current Monitoring</h3>
+                            <div className="space-y-4">
+                                {currentObjects.map((obj, idx) => (
+                                    <div key={idx} className={`border-l-4 ${obj.color} bg-space-card/50 p-4 rounded-r-lg`}>
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="font-bold text-white">{obj.name}</div>
+                                                <div className="text-sm text-space-gray-light">{obj.size} diameter</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="font-bold text-white">{obj.distance}</div>
+                                                <div className={`text-sm font-semibold ${
+                                                    obj.risk === 'SEVERE' ? 'text-red-400' :
+                                                    obj.risk === 'HIGH' ? 'text-orange-400' :
+                                                    obj.risk === 'MODERATE' ? 'text-yellow-400' : 'text-green-400'
+                                                }`}>
+                                                    {obj.risk}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 h-[600px] md:h-[400px]">
-                    <RiskLevel
-                        level="0-1"
-                        title="NO HAZARD"
-                        range="0% Impact Probability"
-                        color="space-success"
-                        desc="The likelihood of a collision is zero, or is so low as to be effectively zero. Also applies to small objects such as meteors and bolides that burn up in the atmosphere."
-                        isActive={hovered === 0}
-                        onHover={() => setHovered(0)}
-                    />
-                    <RiskLevel
-                        level="2-4"
-                        title="MERITING ATTENTION"
-                        range="> 1% Probability"
-                        color="space-warning"
-                        desc="A close pass by a near-Earth object is predicted 10x closer than the moon. While meriting attention by astronomers, there is no cause for public concern."
-                        isActive={hovered === 1}
-                        onHover={() => setHovered(1)}
-                    />
-                    <RiskLevel
-                        level="5-7"
-                        title="THREATENING"
-                        range="Sig. Impact Chance"
-                        color="orange-600"
-                        desc="A close encounter posing a serious, but still uncertain threat of a regional devastation. Critical attention by astronomers is predicted to determine conclusively whether or not a collision will occur."
-                        isActive={hovered === 2}
-                        onHover={() => setHovered(2)}
-                    />
-                    <RiskLevel
-                        level="8-10"
-                        title="CERTAIN COLLISION"
-                        range="100% Impact"
-                        color="space-danger"
-                        desc="A collision is certain, capable of causing localized destruction for a small object or global climatic catastrophe for a large one. Global emergency procedures activated."
-                        isActive={hovered === 3}
-                        onHover={() => setHovered(3)}
-                    />
+                <div className="text-center">
+                    <div className="inline-flex items-center gap-3 px-6 py-3 bg-space-card/50 border border-space-accent/30 rounded-full">
+                        <div className="w-2 h-2 bg-space-accent rounded-full animate-pulse"></div>
+                        <span className="text-space-gray-light">
+                            Last risk assessment update: <span className="text-white font-semibold">15 minutes ago</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </section>

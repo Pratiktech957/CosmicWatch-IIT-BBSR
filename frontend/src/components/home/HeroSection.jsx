@@ -1,74 +1,52 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
     return (
-        <section className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-transparent">
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-space-black/20 to-space-black pointer-events-none" />
+        <section className="relative py-20 px-6 overflow-hidden">
+            <div className="max-w-6xl mx-auto my-10 relative z-10">
+                <div className="text-center relative z-10">
+                    
 
-            {/* Content */}
-            <div className="relative z-20 max-w-7xl mx-auto px-6 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-space-accent/10 border border-space-accent/20 text-space-accent text-xs font-mono uppercase tracking-widest mb-6">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-space-accent opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-space-accent"></span>
-                        </span>
-                        System Online: Tracking 34,000+ Objects
+                    {/* Main headline */}
+                    <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                        <span className="text-white">COSMIC </span>
+                        <span className="text-space-accent">SURVEILLANCE</span>
+                    </h1>
+                    <p className="text-2xl md:text-3xl text-space-gray-light mb-8 max-w-3xl mx-auto">
+                        Real-time monitoring of near-Earth objects and cosmic threats
+                    </p>
+
+                    {/* Subtitle */}
+                    <p className="text-lg text-space-gray-light mb-12 max-w-2xl mx-auto">
+                        Advanced detection system tracking asteroids, comets, and orbital debris with military-grade precision. 
+                        Stay informed about potential cosmic hazards.
+                    </p>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                        <button className="px-8 py-4 bg-space-accent text-space-black font-bold rounded-lg text-lg hover:bg-space-accent/90 transition-all transform hover:scale-105 active:scale-95">
+                            ACCESS LIVE DASHBOARD
+                        </button>
+                        <button className="px-8 py-4 bg-space-card/50 backdrop-blur-sm border border-space-accent/30 text-white font-bold rounded-lg text-lg hover:bg-space-card/70 transition-all">
+                            VIEW DOCUMENTATION
+                        </button>
                     </div>
-                </motion.div>
 
-                <motion.h1
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="text-6xl md:text-8xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-space-highlight to-space-accent/50 mb-6 drop-shadow-2xl"
-                >
-                    COSMIC WATCH
-                </motion.h1>
-
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                    className="text-lg md:text-2xl text-space-highlight/80 max-w-2xl mx-auto mb-10 font-light"
-                >
-                    Real-time <span className="text-space-accent">Near-Earth Object</span> monitoring and risk analysis.
-                    Visualizing the threat from above in cinematic detail.
-                </motion.p>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.7 }}
-                    className="flex flex-col md:flex-row items-center justify-center gap-6"
-                >
-                    <button className="group relative px-8 py-4 bg-space-accent text-space-black font-display font-bold text-lg tracking-widest uppercase hover:bg-white transition-all clip-path-slant overflow-hidden">
-                        <span className="relative z-10 flex items-center gap-2">
-                            View Live Asteroids <ArrowRight size={20} />
-                        </span>
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    </button>
-
-                    <Link to="/signup" className="group flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-display font-bold text-lg tracking-widest uppercase hover:bg-white/5 transition-all">
-                        <Globe size={20} className="text-space-accent" />
-                        Create Free Account
-                    </Link>
-                </motion.div>
-            </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute bottom-10 left-10 hidden md:block">
-                <div className="text-xs font-mono text-space-highlight/40">
-                    Coordinates: 34.0522° N, 118.2437° W<br />
-                    Sector: Milky Way / Orion Arm
+                    {/* Stats bar */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                        {[
+                            { value: "12,847", label: "Objects Tracked", sub: "In database" },
+                            { value: "99.8%", label: "Accuracy", sub: "Detection rate" },
+                            { value: "24/7", label: "Monitoring", sub: "Global coverage" },
+                            { value: "<1s", label: "Latency", sub: "Real-time data" }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="bg-space-card/30 backdrop-blur-sm p-4 rounded-xl border border-space-border">
+                                <div className="text-2xl md:text-3xl font-bold text-space-accent mb-1">{stat.value}</div>
+                                <div className="text-sm text-white font-semibold">{stat.label}</div>
+                                <div className="text-xs text-space-gray-light">{stat.sub}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

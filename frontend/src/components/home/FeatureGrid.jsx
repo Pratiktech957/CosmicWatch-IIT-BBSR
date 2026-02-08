@@ -1,73 +1,84 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { User, Activity, ShieldAlert, Bell } from 'lucide-react';
-
-const FeatureCard = ({ icon: Icon, title, desc, delay }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay }}
-            className="p-8 rounded-2xl bg-space-dark/40 border border-white/5 backdrop-blur-sm group hover:bg-space-dark/60 hover:border-space-accent/30 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden"
-        >
-            <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="w-2 h-2 bg-space-accent rounded-full animate-ping" />
-            </div>
-
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-space-void to-space-black border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Icon className="text-space-highlight group-hover:text-space-accent transition-colors" size={28} />
-            </div>
-
-            <h3 className="text-xl font-display font-bold text-white mb-3 group-hover:text-space-accent transition-colors">
-                {title}
-            </h3>
-            <p className="text-space-highlight/60 text-sm leading-relaxed">
-                {desc}
-            </p>
-        </motion.div>
-    );
-};
+import { FiActivity, FiTarget, FiBarChart2, FiGlobe, FiAlertCircle, FiDatabase } from 'react-icons/fi';
 
 const FeatureGrid = () => {
     const features = [
         {
-            icon: User,
-            title: "Mission Profiles",
-            desc: "Create a personalized account to track specific objects and save simulation configurations.",
-            delay: 0.1
+            icon: <FiActivity />,
+            title: "Real-time Monitoring",
+            desc: "Live tracking of near-Earth objects with sub-second latency",
+            color: "text-cyan-400"
         },
         {
-            icon: Activity,
-            title: "Real-Time Telemetry",
-            desc: "Live data streams providing the latest velocity, distance, and magnitude measurements.",
-            delay: 0.2
+            icon: <FiTarget />,
+            title: "Precision Detection",
+            desc: "Identify objects as small as 10 meters from LEO",
+            color: "text-purple-400"
         },
         {
-            icon: ShieldAlert,
-            title: "Risk Analysis Engine",
-            desc: "Advanced algorithms calculating potential impact probabilities and kinetic energy estimates.",
-            delay: 0.3
+            icon: <FiBarChart2 />,
+            title: "Orbital Analytics",
+            desc: "Advanced trajectory prediction and risk scoring",
+            color: "text-green-400"
         },
         {
-            icon: Bell,
-            title: "Strategic Alerts",
-            desc: "Receive instant notifications when an object enters a high-probability impact corridor.",
-            delay: 0.4
+            icon: <FiGlobe />,
+            title: "Global Coverage",
+            desc: "Monitor all orbital paths with satellite network",
+            color: "text-blue-400"
+        },
+        {
+            icon: <FiAlertCircle />,
+            title: "Hazard Alerts",
+            desc: "Instant notifications for potential impact events",
+            color: "text-red-400"
+        },
+        {
+            icon: <FiDatabase />,
+            title: "Historical Data",
+            desc: "Access decades of astronomical observations",
+            color: "text-yellow-400"
         }
     ];
 
     return (
-        <section className="py-24 bg-transparent relative">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="mb-16 text-center md:text-left">
-                    <h2 className="text-3xl font-display font-bold text-white mb-4">Core Capabilities</h2>
-                    <div className="w-20 h-1 bg-space-accent rounded-full mx-auto md:mx-0" />
+        <section className="py-20 px-6">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-space-accent/10 rounded-full mb-6">
+                        <div className="w-2 h-2 bg-space-accent rounded-full animate-pulse"></div>
+                        <span className="text-space-accent text-sm font-semibold">SYSTEM CAPABILITIES</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                        <span className="text-white">Advanced Cosmic </span>
+                        <span className="text-space-accent">Monitoring</span>
+                    </h2>
+                    <p className="text-space-gray-light text-lg max-w-2xl mx-auto">
+                        Comprehensive surveillance system for near-Earth objects with multi-spectrum detection and AI analysis.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {features.map((feature, index) => (
-                        <FeatureCard key={index} {...feature} />
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {features.map((feature, idx) => (
+                        <div 
+                            key={idx} 
+                            className="bg-space-card/30 backdrop-blur-sm border border-space-border rounded-xl p-6 hover:border-space-accent/50 transition-all duration-300 group hover:transform hover:-translate-y-1"
+                        >
+                            <div className={`text-3xl mb-4 ${feature.color} group-hover:scale-110 transition-transform duration-300`}>
+                                {feature.icon}
+                            </div>
+                            <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                            <p className="text-space-gray-light">{feature.desc}</p>
+                            <div className="mt-6 pt-4 border-t border-space-border/50">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-space-gray">Status</span>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span className="text-green-400 text-sm font-medium">ACTIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>
