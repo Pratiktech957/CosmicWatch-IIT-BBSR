@@ -8,8 +8,7 @@ import About from "./pages/About";
 import Home from "./pages/Home/Home";
 import ForgotPassword from "./pages/ForgotPassword";
 import AuthSuccess from "./pages/AuthSuccess";
-import LiveFeed from "./pages/LiveFeed/LiveFeed";
-import Community from "./pages/Community/Community";
+import Asteroid from "./pages/Asteroid";
 
 function App() {
   return (
@@ -23,12 +22,11 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/about" element={<About />} />
           <Route path="/auth/success" element={<AuthSuccess />} />
+          <Route path="/asteroid/:id" element={<Asteroid />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/live" element={<LiveFeed />} />
-            <Route path="/community" element={<Community />} />
           </Route>
         </Routes>
       </AuthProvider>

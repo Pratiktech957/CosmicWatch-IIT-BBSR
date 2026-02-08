@@ -5,6 +5,7 @@ import { User, Mail, Lock, Rocket, AlertCircle, Loader2 } from "lucide-react";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import SocialAuthButton from "../components/SocialAuthButton";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo/logo.png";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -86,12 +87,11 @@ const Signup = () => {
             <div className="fixed top-0 left-0 w-full z-50 py-6 px-6">
                 <div className="max-w-7xl mx-auto">
                     <Link to="/" className="flex items-center gap-2 group cursor-pointer w-fit">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-space-accent to-blue-600 flex items-center justify-center animate-pulse-slow">
-                            <span className="w-2 h-2 bg-white rounded-full" />
-                        </div>
-                        <span className="font-display font-bold text-2xl tracking-wider text-white group-hover:text-space-accent transition-colors">
-                            COSMIC<span className="font-light text-space-highlight">WATCH</span>
-                        </span>
+                        <img
+                            src={logo}
+                            alt="CosmicWatch Logo"
+                            className="h-[100px] w-[100px] object-contain"
+                        />
                     </Link>
                 </div>
             </div>

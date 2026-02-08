@@ -19,16 +19,35 @@ const AsteroidSchema = new mongoose.Schema({
         diameterKmMin: Number,
         diameterKmMax: Number,
         massKg: Number,
-        density: Number
+        density: Number,
+        absoluteMagnitudeH: Number
     },
 
     orbital: {
         velocityKps: Number,
         distanceFromEarthKm: Number,
-        orbitClass: String,
+        orbitingBody: String,
         eccentricity: Number,
         inclination: Number
     },
+
+    closeApproachData: [{
+        closeApproachDate: String,
+        closeApproachDateFull: String,
+        epochDateCloseApproach: Number,
+        relativeVelocity: {
+            kilometersPerSecond: String,
+            kilometersPerHour: String,
+            milesPerHour: String
+        },
+        missDistance: {
+            astronomical: String,
+            lunar: String,
+            kilometers: String,
+            miles: String
+        },
+        orbitingBody: String
+    }],
 
     hazard: {
         isPotentiallyHazardous: Boolean,

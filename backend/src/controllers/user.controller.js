@@ -56,7 +56,9 @@ import { Alert } from "../models/Alert.js";
 export const getAlerts = async (req, res) => {
     try {
         const userId = req.user.id;
-        const alerts = await Alert.find({ userId }).sort({ createdAt: -1 });
+        const alerts = await Alert.find({ userId })
+            .populate("asteroidId", "name") // Populate name for UI
+            .sort({ createdAt: -1 });
         res.json(alerts);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -73,3 +75,4 @@ export const markAlertRead = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+

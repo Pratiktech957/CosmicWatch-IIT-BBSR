@@ -112,6 +112,8 @@ export const AuthProvider = ({ children }) => {
         // unique situation for social login redirect
     };
 
+
+
     const value = {
         user,
         loading,
@@ -119,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         logout,
-        socialLoginSuccess
+        socialLoginSuccess,
     };
 
     return (

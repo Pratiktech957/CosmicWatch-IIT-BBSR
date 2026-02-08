@@ -27,17 +27,34 @@ export const fetchAsteroidData = async () => {
             diameterKmMax: data.estimated_diameter.kilometers.estimated_diameter_max,
             massKg: 0, // Not provided in feed
             density: 0, // Not provided
+            absoluteMagnitudeH: data.absolute_magnitude_h
           },
           orbital: {
             velocityKps: parseFloat(data.close_approach_data[0].relative_velocity.kilometers_per_second),
             distanceFromEarthKm: parseFloat(data.close_approach_data[0].miss_distance.kilometers),
-            orbitClass: "Unknown", // Requires lookup
+            orbitingBody: data.close_approach_data[0].orbiting_body,
             eccentricity: 0,
             inclination: 0,
           },
+          closeApproachData: data.close_approach_data.map(cad => ({
+            closeApproachDate: cad.close_approach_date,
+            closeApproachDateFull: cad.close_approach_date_full,
+            epochDateCloseApproach: cad.epoch_date_close_approach,
+            relativeVelocity: {
+              kilometersPerSecond: cad.relative_velocity.kilometers_per_second,
+              kilometersPerHour: cad.relative_velocity.kilometers_per_hour,
+              milesPerHour: cad.relative_velocity.miles_per_hour
+            },
+            missDistance: {
+              astronomical: cad.miss_distance.astronomical,
+              lunar: cad.miss_distance.lunar,
+              kilometers: cad.miss_distance.kilometers,
+              miles: cad.miss_distance.miles
+            },
+            orbitingBody: cad.orbiting_body
+          })),
           hazard: {
             isPotentiallyHazardous: data.is_potentially_hazardous_asteroid,
-            riskScore: data.is_potentially_hazardous_asteroid ? 10 : 1,
           },
           lastUpdated: new Date(),
         },
@@ -101,6 +118,7 @@ export const fetchAsteroidById = async (nasaId) => {
           diameterKmMax: data.estimated_diameter.kilometers.estimated_diameter_max,
           massKg: 0, // Not provided in feed
           density: 0, // Not provided
+          absoluteMagnitudeH: data.absolute_magnitude_h
         },
         orbital: {
           velocityKps: parseFloat(
@@ -109,13 +127,29 @@ export const fetchAsteroidById = async (nasaId) => {
           distanceFromEarthKm: parseFloat(
             data.close_approach_data[0].miss_distance.kilometers
           ),
-          orbitClass: "Unknown", // Requires lookup
+          orbitingBody: data.close_approach_data[0].orbiting_body,
           eccentricity: 0,
           inclination: 0,
         },
+        closeApproachData: data.close_approach_data.map(cad => ({
+          closeApproachDate: cad.close_approach_date,
+          closeApproachDateFull: cad.close_approach_date_full,
+          epochDateCloseApproach: cad.epoch_date_close_approach,
+          relativeVelocity: {
+            kilometersPerSecond: cad.relative_velocity.kilometers_per_second,
+            kilometersPerHour: cad.relative_velocity.kilometers_per_hour,
+            milesPerHour: cad.relative_velocity.miles_per_hour
+          },
+          missDistance: {
+            astronomical: cad.miss_distance.astronomical,
+            lunar: cad.miss_distance.lunar,
+            kilometers: cad.miss_distance.kilometers,
+            miles: cad.miss_distance.miles
+          },
+          orbitingBody: cad.orbiting_body
+        })),
         hazard: {
           isPotentiallyHazardous: data.is_potentially_hazardous_asteroid,
-          riskScore: data.is_potentially_hazardous_asteroid ? 10 : 1,
         },
         lastUpdated: new Date(),
       },

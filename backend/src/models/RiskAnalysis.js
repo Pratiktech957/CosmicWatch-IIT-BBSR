@@ -28,6 +28,21 @@ const RiskAnalysisSchema = new mongoose.Schema({
         }
     ],
 
+    history: [
+        {
+            riskLevel: String,
+            impactProbability: Number,
+            calculatedAt: { type: Date, default: Date.now }
+        }
+    ],
+
+    probabilities: {
+        LOW: Number,
+        MEDIUM: Number,
+        HIGH: Number
+    },
+    explanation: mongoose.Schema.Types.Mixed,
+
     calculatedAt: Date
 });
 

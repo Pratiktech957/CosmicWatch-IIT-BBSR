@@ -33,11 +33,11 @@ def decide_risk(p_low, p_med, p_high, pha, sentry, miss_au):
     }
     return max(probs, key=probs.get)
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+# @app.route("/")
+# def home():
+#     return render_template("index.html")
 
-@app.route("/predict", methods=["POST"])
+@app.route("/", methods=["POST"])
 def predict():
     data = request.json
 
@@ -101,4 +101,4 @@ def asteroids():
     })
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=5001, debug=True)

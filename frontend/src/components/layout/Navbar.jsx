@@ -1,15 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, AlertTriangle, Eye, User } from 'lucide-react';
+import { Menu, X, AlertTriangle, User } from 'lucide-react';
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/logo/logo.png';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [alerts, setAlerts] = useState([]);
+    const [showAlerts, setShowAlerts] = useState(false);
     const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+        setIsOpen(false);
+    };
+
+    // Fetch alerts when authenticated
+    useEffect(() => {
+        if (isAuthenticated && user?.token) {
+            fetchAlerts();
+            // Set up polling interval for real-time-ish updates (every 60s)
+            const interval = setInterval(fetchAlerts, 60000);
+            return () => clearInterval(interval);
+        }
+    }, [isAuthenticated, user]);
+
+    const fetchAlerts = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/user/alerts', {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+            setAlerts(res.data);
+        } catch (err) {
+            console.error("Failed to fetch alerts", err);
+        }
+    };
+
+    const markAllRead = async (e) => {
+        e.stopPropagation();
+        try {
+            // Optimistic update
+            const updatedAlerts = alerts.map(a => ({ ...a, isRead: true }));
+            setAlerts(updatedAlerts);
+
+            // In a real app we'd have a bulk mark-read endpoint, for now we just rely on individual clicks or UI state
+            // Or we could loop calls, but that's inefficient. 
+            // Let's assume user clicks individually for now or implement bulk later. 
+            // Actually, for this hackathon, let's just update local state to clear badge.
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleAlertClick = async (alert) => {
+        try {
+            if (!alert.isRead) {
+                await axios.put(`http://localhost:5000/api/user/alerts/${alert._id}/read`, {}, {
+                    headers: { Authorization: `Bearer ${user.token}` }
+                });
+                // Update local state
+                setAlerts(prev => prev.map(a => a._id === alert._id ? { ...a, isRead: true } : a));
+            }
+            setShowAlerts(false);
+            if (alert.asteroidId) {
+                navigate(`/asteroid/${alert.asteroidId._id || alert.asteroidId}`);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,8 +87,7 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Dashboard', path: '/dashboard' },
-        { name: 'Live Feed', path: '/live' },
-        { name: 'Community', path: '/community' },
+        // { name: 'Community Chat', path: '/community' },
         { name: 'About', path: '/about' },
     ];
 
@@ -38,14 +102,12 @@ const Navbar = () => {
             )}
         >
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 group cursor-pointer">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-space-accent to-blue-600 flex items-center justify-center animate-pulse-slow">
-                        <span className="w-2 h-2 bg-white rounded-full" />
-                    </div>
-                    <span className="font-display font-bold text-2xl tracking-wider text-white group-hover:text-space-accent transition-colors">
-                        COSMIC<span className="font-light text-space-highlight">WATCH</span>
-                    </span>
+                    <img
+                        src={logo}
+                        alt="CosmicWatch Logo"
+                        className="h-[100px] w-[100px] object-contain"
+                    />
                 </Link>
 
                 {/* Desktop Links */}
@@ -63,21 +125,79 @@ const Navbar = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="hidden md:flex items-center gap-4">
-                    <button className="text-space-highlight hover:text-space-warning transition-colors" title="Alerts">
+                <div className="hidden md:flex items-center gap-4 relative">
+                    <button
+                        className="text-space-highlight hover:text-space-warning transition-colors relative"
+                        title="Alerts"
+                        onClick={() => setShowAlerts(!showAlerts)}
+                    >
                         <AlertTriangle size={20} />
+                        {alerts.filter(a => !a.isRead).length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                {alerts.filter(a => !a.isRead).length}
+                            </span>
+                        )}
                     </button>
-                    <button className="text-space-highlight hover:text-space-success transition-colors" title="Watchlist">
-                        <Eye size={20} />
-                    </button>
+
+                    {/* Alert Dropdown */}
+                    <AnimatePresence>
+                        {showAlerts && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="absolute top-10 right-0 w-80 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 max-h-96 overflow-y-auto"
+                            >
+                                <div className="p-4 border-b border-white/10 flex justify-between items-center">
+                                    <h3 className="font-bold text-space-highlight text-sm">NOTIFICATIONS</h3>
+                                    {alerts.some(a => !a.isRead) && (
+                                        <button
+                                            onClick={markAllRead}
+                                            className="text-xs text-blue-400 hover:text-blue-300"
+                                        >
+                                            Mark all read
+                                        </button>
+                                    )}
+                                </div>
+
+                                {alerts.length === 0 ? (
+                                    <div className="p-8 text-center text-gray-500 text-sm">
+                                        No new alerts
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col">
+                                        {alerts.map(alert => (
+                                            <div
+                                                key={alert._id}
+                                                className={`p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors ${!alert.isRead ? 'bg-white/5 border-l-2 border-l-red-500' : ''}`}
+                                                onClick={() => handleAlertClick(alert)}
+                                            >
+                                                <div className="flex items-start gap-3">
+                                                    <AlertTriangle className={`w-4 h-4 mt-1 ${alert.alertType === 'RISK_INCREASE' ? 'text-red-500' : 'text-yellow-500'}`} />
+                                                    <div>
+                                                        <p className={`text-sm ${!alert.isRead ? 'text-white font-medium' : 'text-gray-400'}`}>
+                                                            {alert.message}
+                                                        </p>
+                                                        <span className="text-xs text-gray-600 mt-1 block">
+                                                            {new Date(alert.createdAt).toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {isAuthenticated ? (
                         <div className="flex items-center gap-4">
-                            <span className="text-space-highlight text-sm font-display tracking-wider uppercase">
-                                {user?.name || "COMMANDER"}
+                            <span className="text-space-highlight text-sm">
+                                {user?.name}
                             </span>
                             <button
-                                onClick={logout}
+                                onClick={handleLogout}
                                 className="flex items-center gap-2 px-4 py-2 border border-red-500/50 rounded hover:bg-red-500/10 transition-all text-red-400 font-display text-sm uppercase tracking-wider"
                             >
                                 <span>Logout</span>
@@ -124,13 +244,32 @@ const Navbar = () => {
                             <button className="flex items-center gap-2 text-space-warning">
                                 <AlertTriangle size={18} /> Alerts
                             </button>
-                            <button className="flex items-center gap-2 text-space-highlight">
-                                <Eye size={18} /> Watchlist
-                            </button>
+                            {isAuthenticated ? (
+                                <>
+                                    <span className="text-space-accent font-display text-lg uppercase tracking-wider px-2">
+                                        {user?.name || 'User'}
+                                    </span>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center gap-2 text-red-400 font-display text-lg uppercase tracking-wider text-left"
+                                    >
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    className="flex items-center gap-2 text-space-accent font-display text-lg uppercase tracking-wider"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Login
+                                </Link>
+                            )}
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
         </motion.nav>
     );
 };

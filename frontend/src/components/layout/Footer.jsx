@@ -28,7 +28,7 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-space-highlight/20 font-mono">
+                <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-white/80 font-mono">
                     &copy; {new Date().getFullYear()} CosmicWatch Initiative. Data courtesy of NASA JPL / CNEOS.
                 </div>
             </div>

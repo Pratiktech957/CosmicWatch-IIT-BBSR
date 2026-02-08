@@ -1,5 +1,5 @@
 import { Alert } from "../models/Alert.js";
-import { SearchHistory } from "../models/SearchHistory.js";
+import { User } from "../models/User.js";
 
 // Check if we need to alert users about this asteroid
 export const createRiskAlerts = async (asteroid, riskAnalysis) => {
@@ -9,34 +9,36 @@ export const createRiskAlerts = async (asteroid, riskAnalysis) => {
             return;
         }
 
-        // Find users who have searched/watched this asteroid
-        // In a real app, we might have a specific "WatchList" model, but here "SearchHistory" acts as interest
-        const interestedUsers = await SearchHistory.find({ asteroidId: asteroid._id }).distinct("userId");
+        console.log(`[ALERT SERVICE] High risk detected for ${asteroid.name}. Broadcasting to all users.`);
 
-        if (interestedUsers.length === 0) return;
+        // Find ALL users to broadcast the alert
+        const allUsers = await User.find({}, "_id");
 
-        for (const userId of interestedUsers) {
+        if (allUsers.length === 0) return;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (const user of allUsers) {
             // Check if alert already exists for today to avoid spam
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
             const existingAlert = await Alert.findOne({
-                userId,
+                userId: user._id,
                 asteroidId: asteroid._id,
                 createdAt: { $gte: today }
             });
 
             if (!existingAlert) {
                 await Alert.create({
-                    userId,
+                    userId: user._id,
                     asteroidId: asteroid._id,
                     alertType: "RISK_INCREASE",
-                    message: `Hypothetical Alert: Asteroid ${asteroid.name} has a ${riskAnalysis.riskLevel} risk level! Impact probability: ${(riskAnalysis.impactProbability * 100).toFixed(2)}%.`,
+                    message: `⚠️ HIGH RISK ALERT: Asteroid ${asteroid.name} has a ${riskAnalysis.riskLevel} risk level! Impact probability: ${(riskAnalysis.impactProbability * 100).toFixed(2)}%.`,
                     isRead: false
                 });
-                console.log(`Alert created for user ${userId} regarding asteroid ${asteroid.name}`);
             }
         }
+        console.log(`[ALERT SERVICE] Broadcasted alerts to ${allUsers.length} users.`);
+
     } catch (err) {
         console.error("Error creating alerts:", err.message);
     }

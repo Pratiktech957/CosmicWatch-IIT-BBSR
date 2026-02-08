@@ -4,6 +4,7 @@ import passport from "passport";
 import asteroidRoutes from "./routes/asteroid.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+
 import "./config/passport.js"; // Import passport config
 import startCronJobs from "./cron/sync.js";
 
@@ -17,7 +18,7 @@ app.get("/", (req, res) => {
   res.send("🚀 Cosmic Watch Backend Running");
 });
 
-app.use("/api", asteroidRoutes);
+app.use("/api/asteroids", asteroidRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 
